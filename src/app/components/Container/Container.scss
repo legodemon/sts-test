@@ -1,0 +1,63 @@
+@import "src/app/style/_mixins.scss";
+
+#root {
+  @include flex-box(column, flex-start, center);
+
+  .container {
+    width: 490px;
+
+    .title {
+
+      margin-top: 18px;
+      padding-bottom: 8px;
+
+      font-size: 20px;
+      font-weight: bold;
+
+      border-bottom: 3px solid black;
+
+    }
+    .static {
+      font-size: 18px;
+
+      margin-top: 26px;
+      position: relative;
+
+      &:before {
+        content: '';
+        position: absolute;
+        bottom: .4rem;
+        left: 60px;
+        width: 88%;
+        height: 0;
+        line-height: 0;
+        border-bottom: 2px dotted black;
+      }
+    }
+
+    .input {
+      margin-top: 26px;
+      margin-left: 18px;
+
+      input {
+        width: 223px;
+        height: 24px;
+      }
+    }
+    .list {
+      @include flex-box(column, flex-start, flex-start);
+
+      margin-top: 18px;
+      margin-left: 18px;
+
+      .more {
+        display: inline;
+        font-size: 14px;
+        color: orange;
+        text-decoration: underline;
+        cursor: pointer;
+        width: auto;
+      }
+    }
+  }
+}
