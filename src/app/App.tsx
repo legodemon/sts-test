@@ -1,8 +1,10 @@
 import * as React from 'react'
 
 import {Container} from 'src/app/components/Container/Container'
+import {Fade} from 'src/app/components/Commons/Fade/Fade'
 
 import './style/style.scss'
+import './App.scss'
 
 const initialState: State = {
   items: [
@@ -41,6 +43,7 @@ export interface Item {
 }
 
 interface State {
+  warn?: number
   items: Array<Item>
 }
 
@@ -82,18 +85,25 @@ export class App extends React.Component<any, State> {
     this.setState({items})
   }
 
+  hideModal = () => this.setState({warn: undefined})
+
+  showModal = (id: number) => this.setState({warn: id})
+
   render() {
-    const {items} = this.state
+    const {items, warn} = this.state
+
+    const warnItem = items.find( (item: Item) => item.id === warn)
 
     return [
       <Container
         key={'own'}
         title={'О себе'}
-        items={items.filter(({own}: Item) => own)}
+        items={items.filter(({own}: Item) => own).sort((a:Item, b:Item) => b.id - a.id)}
         editable
         removeAction={this.removeItem}
         addAction={this.addItem}
         makeOwnAction={this.makeOwn}
+        doWarn={this.showModal}
       />,
       <Container
         key={'other'}
@@ -102,7 +112,18 @@ export class App extends React.Component<any, State> {
         removeAction={this.removeItem}
         addAction={this.addItem}
         makeOwnAction={this.makeOwn}
-      />
+        doWarn={this.showModal}
+      />,
+      <Fade
+        key={'modal'}
+        in={!!warnItem}
+        timeout={0}
+        className={'modal'}
+        onClick={this.hideModal}
+        duration={300}
+      >
+        <div className={'window'}>{`Жалоба на хобби ${warnItem ? warnItem.value : ''}`}</div>
+      </Fade>
     ]
   }
 }

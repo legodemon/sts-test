@@ -13,6 +13,7 @@ interface Props {
   removeAction: (id: number) => void
   addAction: (value: string) => void
   makeOwnAction: (id: number) => void
+  doWarn: (id: number) => void
   editable?: boolean
 }
 
@@ -43,9 +44,8 @@ export class Container extends React.Component<Props, State> {
   }
 
   render() {
-    const {title, editable, items, removeAction, makeOwnAction} = this.props
+    const {title, editable, items, removeAction, makeOwnAction, doWarn} = this.props
     const {numberVisibleItems} = this.state
-
     const hiddenCount = items.length - numberVisibleItems
 
     return (
@@ -59,16 +59,19 @@ export class Container extends React.Component<Props, State> {
           : null
         }
         <div className={'list'}>
-          {items.map(({id, value, own, other}: Item, index: number) =>
-            <InterestItem
-              id={id}
-              key={`item${id}`}
-              value={value}
-              editable={editable}
-              action={editable ? removeAction : makeOwnAction}
-              hidden={index >= numberVisibleItems}
-              both={own && other}
-            />)}
+          {items.map(({id, value, own, other}: Item, index: number) => {
+            return index < numberVisibleItems ?
+              <InterestItem
+                id={id}
+                key={`item${id}`}
+                value={value}
+                editable={editable}
+                action={editable ? removeAction : makeOwnAction}
+                doWarn={doWarn}
+                both={own && other}
+              />
+              : null
+          })}
           {hiddenCount > 0 ? <div className={'more'} onClick={this.showMore}>{`ещё ${hiddenCount} хобби`}</div> : null }
         </div>
       </div>

@@ -9,11 +9,6 @@
   font-size: 14px;
   position: relative;
   cursor: pointer;
-  //height: 16px;
-
-  &.hidden {
-   display: none;
-  }
 
   &:hover {
     .action {

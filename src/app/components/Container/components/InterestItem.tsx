@@ -2,38 +2,62 @@ import * as React from 'react'
 import classNames from 'classnames'
 
 import './InterestItem.scss'
+import {Fade} from 'src/app/components/Commons/Fade/Fade'
 
 interface Props {
   id: number
   value: string
   action: (id: number) => void
+  doWarn: (id: number) => void
   editable?: boolean
-  hidden: boolean
   both: boolean
 }
 
-export class InterestItem extends React.Component<Props> {
+interface State {
+  show: boolean
+}
+
+export class InterestItem extends React.Component<Props, State> {
+
+  constructor(props: Props) {
+    super(props)
+
+    this.state = {
+      show: false
+    }
+  }
 
   actionClickHandler = () => {
     const {id, action} = this.props
-
     action(id)
   }
 
+  componentDidMount() {
+    const {show} = this.state
+
+    if (!show) {
+      window.setTimeout(() => this.setState({show: true}), 200)
+    }
+  }
+
   warningClickHandler = () => {
-    console.log('warn')
+    const {doWarn, id} = this.props
+    doWarn(id)
   }
 
   render() {
-    const {editable, value, hidden, both} = this.props
+    const {editable, value, both} = this.props
+    const {show} = this.state
 
     return (
-      <div className={classNames('item', {['hidden']: hidden})}>
+      <Fade timeout={0} duration={200} in={show} className={'item'}>
         <div className={classNames('action', {['remove']: editable, ['add']: !editable})} onClick={this.actionClickHandler}/>
         <div className={'value'}>{value}</div>
         {!editable ? <div className={'warning'} onClick={this.warningClickHandler}>пожаловаться</div> : null}
-        {!editable && both ? <div className={'added'}>Добавлено в ваши увлечения</div> : null}
-      </div>
+        <Fade timeout={0} in={!editable && both}>
+          <div className={'added'}>Добавлено в ваши увлечения</div>
+        </Fade>
+      </Fade>
     )
   }
 }
